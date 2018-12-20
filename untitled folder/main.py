@@ -1,7 +1,11 @@
 import os
-from bottle import (get, post, redirect, request, route, run, static_file,
-                    template)
+from bottle import (get, post, redirect, request, route, run, static_file, jinja2_view,
+                    template, error)
 import utils
+from functools import partial
+
+view = partial(jinja2_view, template_lookup=['templates'])
+
 
 # Static Routes
 
@@ -20,6 +24,28 @@ def img(filepath):
 @route('/')
 def index():
     sectionTemplate = "./templates/home.tpl"
-    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData = {})
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData={})
 
-run(host='0.0.0.0', port=os.environ.get('PORT', 5000))
+
+@route('/browse')
+def index():
+    sectionTemplate = "./templates/browse.tpl"
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData={})
+
+
+@route('/search')
+def index():
+    sectionTemplate = "./templates/search.tpl"
+    return template("./pages/index.html", version=utils.getVersion(), sectionTemplate=sectionTemplate, sectionData={})
+
+
+@error(404)
+def index():
+    print("????")
+    sectionTemplate = "./templates/404.tpl"
+    return template("./pages/index.html", sectionTemplate=sectionTemplate)
+
+# run(host='0.0.0.0', port=os.environ.get('PORT', 5000))
+
+
+run(host='localhost', port=7002)
